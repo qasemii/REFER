@@ -713,7 +713,7 @@ class LanguageModel(BaseModel):
         loss_dict['loss'] = loss
 
         # Compute expl metrics
-        with torch.no_grad():
+        with torch.inference_mode():
             # Compute preds
             preds = calc_preds(logits)
 
@@ -787,6 +787,14 @@ class LanguageModel(BaseModel):
         if self.save_outputs:
             ret_dict['attrs'] = attrs.detach()
 
+        from torch import Tensor
+
+        def detach_if_tensor(x: Tensor) -> Tensor:
+            return x.detach() if isinstance(x, Tensor) else x
+
+        ret_dict_detach = {k: detach_if_tensor(v) for k, v in ret_dict.items()}
+        ret_dict = ret_dict_detach
+
         return ret_dict
 
     def aggregate_epoch(self, outputs, split):
@@ -809,15 +817,18 @@ class LanguageModel(BaseModel):
             if not os.path.exists(out_dir):
                 os.makedirs(out_dir)
             keys = ['preds', 'attrs']
-            for key in keys:
-                if key == 'preds':
-                    logits = torch.cat([x['logits'] for x in outputs])
-                    out_data = calc_preds(logits)
-                else:
-                    out_data = torch.cat([x[key] for x in outputs])
-                out_data = out_data.cpu().detach()
-                out_file = os.path.join(out_dir, f'{eval_split}_{key}.pkl')
-                pickle.dump(out_data.squeeze(), open(out_file, 'wb'))
+
+            with torch.inference_mode():
+                for key in keys:
+                    if key == 'preds':
+                        logits = torch.cat([x['logits'] for x in outputs])
+                        out_data = calc_preds(logits)
+                    else:
+                        out_data = torch.cat([x[key] for x in outputs])
+                    out_data = out_data.cpu().detach()
+                    out_file = os.path.join(out_dir, f'{eval_split}_{key}.pkl')
+                    with open(out_file, 'wb') as f:
+                        pickle.dump(out_data.squeeze(), f)
 
     def configure_optimizers(self):
         optimizer_params = setup_optimizer_params(self.model_dict, self.optimizer, self.explainer_type, self.attr_dict['attr_pooling'], self.a2r)
