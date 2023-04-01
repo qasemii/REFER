@@ -1,11 +1,11 @@
 import os, pickle, warnings
-from typing import Optional, List
+from typing import List
 from timeit import default_timer as timer
 
 import torch
 from torch import nn
 import torch.nn.functional as F
-from torch.nn.utils.rnn import pad_sequence
+from torch import Tensor
 
 from hydra.utils import instantiate, get_original_cwd
 from omegaconf import DictConfig
@@ -787,10 +787,10 @@ class LanguageModel(BaseModel):
         if self.save_outputs:
             ret_dict['attrs'] = attrs.detach()
 
-        from torch import Tensor
+        breakpoint()
 
-        def detach_if_tensor(x: Tensor) -> Tensor:
-            return x.detach() if isinstance(x, Tensor) else x
+        # def detach_if_tensor(x: Tensor) -> Tensor:
+        #     return x.detach() if isinstance(x, Tensor) else x
 
         # ret_dict_detach = {k: detach_if_tensor(v) for k, v in ret_dict.items()}
         # ret_dict = ret_dict_detach
@@ -808,8 +808,8 @@ class LanguageModel(BaseModel):
         
         for dataset_idx, eval_split in enumerate(splits):
             outputs = outputs_list[dataset_idx]
-            log_epoch_losses(self, outputs, eval_split) # Log epoch losses
-            log_epoch_metrics(self, outputs, eval_split) # Log epoch metrics
+            log_epoch_losses(self, outputs, eval_split)  # Log epoch losses
+            log_epoch_metrics(self, outputs, eval_split)  # Log epoch metrics
 
         # Save outputs to file            
         if self.save_outputs:
