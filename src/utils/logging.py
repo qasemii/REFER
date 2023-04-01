@@ -69,11 +69,6 @@ def get_neptune_logger(
     return neptune_logger
 
 def log_data_to_neptune(model_class, data, data_name, data_type, suffix, split, ret_dict=None, topk=None, detach_data=True):
-
-    from torch import Tensor
-    if isinstance(data, Tensor):
-        data = data.detach()
-
     if topk:
         for i, k in enumerate(topk):
             model_class.log(f'{split}_{data_name}_{k}_{data_type}_{suffix}', data[i].detach(), prog_bar=True, sync_dist=(split != 'train'))
