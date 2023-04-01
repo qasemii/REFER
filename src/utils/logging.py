@@ -88,7 +88,7 @@ def log_data_to_neptune(model_class, data, data_name, data_type, suffix, split, 
     return ret_dict
 
 def log_step_losses(model_class, loss_dict, ret_dict, do_expl_reg, split):
-    ret_dict = log_data_to_neptune(model_class, loss_dict['loss'], 'total', 'loss', 'step', split, ret_dict, topk=None)  # , detach_data=False)
+    ret_dict = log_data_to_neptune(model_class, loss_dict['loss'], 'total', 'loss', 'step', split, ret_dict, topk=None, detach_data=False)
     ret_dict = log_data_to_neptune(model_class, loss_dict['task_loss'], 'task', 'loss', 'step', split, ret_dict, topk=None)
     if do_expl_reg:
         ret_dict = log_data_to_neptune(model_class, loss_dict['expl_loss'], 'expl', 'loss', 'step', split, ret_dict, topk=None)
