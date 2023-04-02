@@ -5,7 +5,7 @@ torch
 torchvision
 torchaudio
 torchtext
-tensorflow
+# tensorflow
 datasets
 pytorch-lightning==1.4.8
 hydra-core==1.1.0
