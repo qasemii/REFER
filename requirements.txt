@@ -4,7 +4,7 @@ transformers
 torch
 torchvision
 torchaudio
-torchtext
+# torchtext
 # tensorflow
 datasets
 pytorch-lightning==1.4.8
