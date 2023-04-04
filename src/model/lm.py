@@ -14,12 +14,16 @@ from transformers import AutoModel, AutoTokenizer
 
 from src.model.base_model import BaseModel
 from src.model.mlp import MLP_factory
+from src.model.select_k import Select_K
 from src.utils.data import dataset_info
 from src.utils.losses import calc_task_loss, calc_comp_loss, calc_suff_loss, calc_plaus_loss, calc_l2e_loss, calc_a2r_loss
 from src.utils.metrics import init_best_metrics, init_perf_metrics, calc_preds, calc_comp, calc_suff, calc_log_odds, calc_aopc, calc_plaus
 from src.utils.expl import attr_algos, baseline_required, calc_expl
 from src.utils.optim import setup_optimizer_params, setup_scheduler, freeze_layers
 from src.utils.logging import log_step_losses, log_step_metrics, log_epoch_losses, log_epoch_metrics
+
+from imle.aimle import aimle
+from imle.target import AdaptiveTargetDistribution
 
 
 class LanguageModel(BaseModel):
@@ -41,6 +45,7 @@ class LanguageModel(BaseModel):
                  a2r: bool = False, a2r_wt: float = 0.0, a2r_criterion: str = None, a2r_task_out: str = None,
                  save_outputs: bool = False, exp_id: str = None,
                  measure_attrs_runtime: bool = False,
+                 e2e: bool = False,
                  **kwargs):
 
         super().__init__()
@@ -218,6 +223,13 @@ class LanguageModel(BaseModel):
             self.model_dict['a2r_task_encoder'] = self.a2r_task_encoder
             self.model_dict['a2r_task_head'] = self.a2r_task_head
 
+        # ##########################################
+        # initializing differentiable select_k model
+        # ##########################################
+        if e2e:
+            # The initial perturbation size is set to 0.0, and automatically tuned by the model during training
+            self.target_distribution = AdaptiveTargetDistribution(initial_alpha=1.0, initial_beta=0.0)
+
         self.fresh = fresh
         if fresh:
             assert not expl_reg
@@ -249,6 +261,8 @@ class LanguageModel(BaseModel):
         self.a2r_wt = a2r_wt
         self.a2r_criterion = a2r_criterion
         self.a2r_task_out = a2r_task_out
+
+        self.e2e = e2e
 
         if save_outputs:
             assert exp_id is not None
@@ -404,7 +418,22 @@ class LanguageModel(BaseModel):
             batch_size = int(batch_size / self.num_classes)
 
         prev_end = 0
-        expls = torch.stack([calc_expl(attrs, k, attn_mask) for k in topk]).reshape(-1, max_length)
+
+        # expls = torch.stack([calc_expl(attrs, k, attn_mask) for k in topk]).reshape(-1, max_length)
+        if self.e2e:
+            temp = []
+            for k in topk:
+                @aimle(target_distribution=self.target_distribution)
+                def imle_select_k(attrs) -> Tensor:
+                    return top_k_perecent(attrs, k)
+
+                # Initial the differentiable select k model
+                select_k_model = Select_K(imle_select_k)
+
+                temp.append(select_k_model(attrs))
+            expls = torch.stack(temp).reshape(-1, max_length)  # stack the results
+        else:
+            expls = torch.stack([calc_expl(attrs, k, attn_mask) for k in topk]).reshape(-1, max_length)
         inv_expls = (1 - expls) * attn_mask.unsqueeze(0).expand(len(topk), -1, -1).reshape(-1, max_length)
         inv_expls[:, 0] = 1 # always treat CLS token as positive token
 
