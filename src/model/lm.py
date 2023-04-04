@@ -787,7 +787,6 @@ class LanguageModel(BaseModel):
         if self.save_outputs:
             ret_dict['attrs'] = attrs.detach()
 
-        breakpoint()
 
         # def detach_if_tensor(x: Tensor) -> Tensor:
         #     return x.detach() if isinstance(x, Tensor) else x
