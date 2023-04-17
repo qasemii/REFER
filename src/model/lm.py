@@ -432,7 +432,7 @@ class LanguageModel(BaseModel):
                 # Initial the differentiable select k model
                 self.select_k_model = Select_K(imle_select_k)
 
-                temp.append(select_k_model(attrs))
+                temp.append(self.select_k_model(attrs))
             expls = torch.stack(temp).reshape(-1, max_length)  # stack the results
         else:
             expls = torch.stack([calc_expl(attrs, k, attn_mask) for k in topk]).reshape(-1, max_length)
