@@ -227,6 +227,7 @@ class LanguageModel(BaseModel):
         # ##########################################
         # initializing differentiable select_k model
         # ##########################################
+        self.select_k_model = None
         if e2e:
             # The initial perturbation size is set to 0.0, and automatically tuned by the model during training
             self.target_distribution = AdaptiveTargetDistribution(initial_alpha=1.0, initial_beta=0.0)
@@ -429,7 +430,7 @@ class LanguageModel(BaseModel):
                     return top_k_perecent(attrs, k)
 
                 # Initial the differentiable select k model
-                select_k_model = Select_K(imle_select_k)
+                self.select_k_model = Select_K(imle_select_k)
 
                 temp.append(select_k_model(attrs))
             expls = torch.stack(temp).reshape(-1, max_length)  # stack the results
