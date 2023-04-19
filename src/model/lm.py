@@ -32,7 +32,7 @@ class LanguageModel(BaseModel):
                  arch: str, dataset: str, optimizer: DictConfig, num_classes: int,
                  scheduler: DictConfig, num_freeze_layers: int = 0, freeze_epochs=-1, neg_weight=1,
                  expl_reg: bool = False, expl_reg_freq: int = 1, task_wt: float = None,
-                 train_topk: List[int] = [10], eval_topk: List[int] = [10],
+                 train_topk: List[int] = [1, 5, 10, 20, 50], eval_topk: List[int] = [1, 5, 10, 20, 50],
                  comp_wt: float = 0.0, comp_criterion: str = None, comp_margin: float = None, comp_target: bool = False,
                  suff_wt: float = 0.0, suff_criterion: str = None, suff_margin: float = None, suff_target: bool = False,
                  log_odds: bool = False, log_odds_target: bool = False,
@@ -227,17 +227,10 @@ class LanguageModel(BaseModel):
         # ##########################################
         # initializing differentiable select_k model
         # ##########################################
-        # self.select_k_model = None
-        # if e2e:
+        self.select_k_model = None
+        if e2e:
             # The initial perturbation size is set to 0.0, and automatically tuned by the model during training
-        self.target_distribution = AdaptiveTargetDistribution(initial_alpha=1.0, initial_beta=0.0)
-
-        @aimle(target_distribution=self.target_distribution)
-        def imle_select_k(attrs) -> Tensor:
-            return top_k_perecent(attrs, train_topk[0])
-
-        # Initial the differentiable select k model
-        self.select_k_model = Select_K(imle_select_k)
+            self.target_distribution = AdaptiveTargetDistribution(initial_alpha=1.0, initial_beta=0.0)
 
         self.fresh = fresh
         if fresh:
@@ -429,22 +422,20 @@ class LanguageModel(BaseModel):
         prev_end = 0
 
         # expls = torch.stack([calc_expl(attrs, k, attn_mask) for k in topk]).reshape(-1, max_length)
-        # if self.e2e:
-        #     temp = []
-        #     for k in topk:
-        #         @aimle(target_distribution=self.target_distribution)
-        #         def imle_select_k(attrs) -> Tensor:
-        #             return top_k_perecent(attrs, k)
-        #
-        #         # Initial the differentiable select k model
-        #         self.select_k_model = Select_K(imle_select_k)
-        #
-        #         temp.append(self.select_k_model(attrs))
-        #     expls = torch.stack(temp).reshape(-1, max_length)  # stack the results
-        # else:
-        #     expls = torch.stack([calc_expl(attrs, k, attn_mask) for k in topk]).reshape(-1, max_length)
+        if self.e2e:
+            temp = []
+            for k in topk:
+                @aimle(target_distribution=self.target_distribution)
+                def imle_select_k(attrs) -> Tensor:
+                    return top_k_perecent(attrs, k)
 
-        expls = self.select_k_model(attrs).reshape(-1, max_length)
+                # Initial the differentiable select k model
+                self.select_k_model = Select_K(imle_select_k)
+
+                temp.append(self.select_k_model(attrs))
+            expls = torch.stack(temp).reshape(-1, max_length)  # stack the results
+        else:
+            expls = torch.stack([calc_expl(attrs, k, attn_mask) for k in topk]).reshape(-1, max_length)
         inv_expls = (1 - expls) * attn_mask.unsqueeze(0).expand(len(topk), -1, -1).reshape(-1, max_length)
         inv_expls[:, 0] = 1 # always treat CLS token as positive token
 
