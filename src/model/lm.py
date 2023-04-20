@@ -428,9 +428,9 @@ class LanguageModel(BaseModel):
                 @aimle(target_distribution=self.target_distribution)
                 def imle_select_k(attrs) -> Tensor:
                     return top_k_perecent(attrs, k)
-
+                
                 # Initial the differentiable select k model
-                self.select_k_model = Select_K(imle_select_k)
+                self.select_k_model = imle_select_k
 
                 temp.append(self.select_k_model(attrs))
             expls = torch.stack(temp).reshape(-1, max_length)  # stack the results
