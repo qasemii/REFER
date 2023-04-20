@@ -581,7 +581,7 @@ class LanguageModel(BaseModel):
         else:
             log_odds_targets = None
 
-        logits_expand = self.forward(input_ids_expand.detach(), attn_mask_expand.detach())
+        logits_expand = self.forward(input_ids_expand, attn_mask_expand)
         task_logits = logits_expand[task_start:task_end, :] if 'task' in expl_keys else None
         comp_logits = logits_expand[comp_start:comp_end, :] if 'comp' in expl_keys else None
         suff_logits = logits_expand[suff_start:suff_end, :] if 'suff' in expl_keys else None
