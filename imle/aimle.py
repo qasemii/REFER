@@ -79,6 +79,7 @@ def aimle(function: Optional[Callable[[Tensor], Tensor]] = None,
         class WrappedFunc(torch.autograd.Function):
             @staticmethod
             def forward(ctx, theta: Tensor, *args):
+                print('FORWARD-->')
                 # [BATCH_SIZE, ...]
                 theta_shape = theta.shape
 
@@ -125,6 +126,7 @@ def aimle(function: Optional[Callable[[Tensor], Tensor]] = None,
 
             @staticmethod
             def backward(ctx, dy):
+                print('<--BACKWARD')
                 # theta: [BATCH_SIZE, ...]
                 # noise: [BATCH_SIZE, N_TOTAL_SAMPLES, ...]
                 # z_3d: [BATCH_SIZE, N_TOTAL_SAMPLES, ...]
