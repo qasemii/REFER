@@ -476,16 +476,16 @@ class LanguageModel(BaseModel):
                 prev_end = task_end
                 
             else:
-                # input_ids_expand = input_ids
-                # attn_mask_expand = attn_mask
-                # task_start, task_end = prev_end, prev_end + batch_size
-                # prev_end = task_end
-
-                input_ids_expand = input_ids.unsqueeze(0).expand(len(topk), -1, -1).reshape(-1, max_length)
-                attn_mask_expand = expls
-                task_targets = None if targets is None else targets.unsqueeze(0).expand(len(topk), -1).reshape(-1)
-                task_start, task_end = prev_end, prev_end + batch_size * len(topk)
+                input_ids_expand = input_ids
+                attn_mask_expand = attn_mask
+                task_start, task_end = prev_end, prev_end + batch_size
                 prev_end = task_end
+
+                # input_ids_expand = input_ids.unsqueeze(0).expand(len(topk), -1, -1).reshape(-1, max_length)
+                # attn_mask_expand = expls
+                # task_targets = None if targets is None else targets.unsqueeze(0).expand(len(topk), -1).reshape(-1)
+                # task_start, task_end = prev_end, prev_end + batch_size * len(topk)
+                # prev_end = task_end
 
         else:
             attn_mask_expand = self.empty_tensor.clone()
@@ -600,7 +600,7 @@ class LanguageModel(BaseModel):
         }
 
         targets_dict = {
-            'task': task_targets,
+            'task': targets,
             'comp': comp_targets,
             'suff': suff_targets,
             'log_odds': log_odds_targets,
