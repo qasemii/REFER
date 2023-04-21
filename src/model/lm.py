@@ -14,7 +14,6 @@ from transformers import AutoModel, AutoTokenizer
 
 from src.model.base_model import BaseModel
 from src.model.mlp import MLP_factory
-from src.model.select_k import Select_K
 from src.utils.data import dataset_info
 from src.utils.losses import calc_task_loss, calc_comp_loss, calc_suff_loss, calc_plaus_loss, calc_l2e_loss, calc_a2r_loss
 from src.utils.metrics import init_best_metrics, init_perf_metrics, calc_preds, calc_comp, calc_suff, calc_log_odds, calc_aopc, calc_plaus
