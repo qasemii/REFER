@@ -8,7 +8,7 @@ from src.utils.metrics import calc_preds, get_step_metrics, get_epoch_metrics
 
 API_LIST = {
     "neptune": {
-        'reza': 'eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiIyMWU4YjIxNy0yNzRkLTQyM2ItODNiMy1hMDU5NjNlNWFjZjIifQ==',
+        'pasquale': 'eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiIyMWU4YjIxNy0yNzRkLTQyM2ItODNiMy1hMDU5NjNlNWFjZjIifQ==',
     },
 }
 
