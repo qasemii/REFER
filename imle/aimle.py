@@ -125,7 +125,6 @@ def aimle(function: Optional[Callable[[Tensor], Tensor]] = None,
 
             @staticmethod
             def backward(ctx, dy):
-                print('backward')
                 # theta: [BATCH_SIZE, ...]
                 # noise: [BATCH_SIZE, N_TOTAL_SAMPLES, ...]
                 # z_3d: [BATCH_SIZE, N_TOTAL_SAMPLES, ...]
