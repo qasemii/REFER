@@ -506,7 +506,7 @@ class LanguageModel(BaseModel):
             if mode == 'loss':
                 comp_input_ids = input_ids.unsqueeze(0).expand(len(topk), -1, -1).reshape(-1, max_length)
                 input_ids_expand = torch.cat((input_ids_expand, comp_input_ids), dim=0)
-                self.select_k_model(attrs)
+                attn_mask_expand = torch.cat((attn_mask_expand, inv_expls), dim=0)
             elif mode == 'metric':
                 if fresh:
                     comp_input_ids = torch.ones_like(fresh_input_ids) * self.tokenizer.pad_token_id
