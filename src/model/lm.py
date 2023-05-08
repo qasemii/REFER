@@ -446,7 +446,7 @@ class LanguageModel(BaseModel):
 
         # Initial the differentiable select all token model
         self.task_bridge = imle_select_all
-        task_expls = self.select_k_model(attrs)
+        task_expls = self.task_bridge(attrs)
 
         if 'task' in expl_keys:
             if fresh:
