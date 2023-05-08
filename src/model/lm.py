@@ -438,6 +438,16 @@ class LanguageModel(BaseModel):
         inv_expls = (1 - expls) * attn_mask.unsqueeze(0).expand(len(topk), -1, -1).reshape(-1, max_length)
         inv_expls[:, 0] = 1 # always treat CLS token as positive token
 
+        # This layer select all the tokens (k=100%)
+        # The reason is that we want to backpropagate the task loss through the rationale extractor
+        @aimle(target_distribution=self.target_distribution)
+        def imle_select_all(attrs) -> Tensor:
+            return top_k_percent(attrs, 100)
+
+        # Initial the differentiable select all token model
+        self.task_bridge = imle_select_all
+        task_expls = self.select_k_model(attrs)
+
         if 'task' in expl_keys:
             if fresh:
                 fresh_input_ids, fresh_attn_mask = [], []
@@ -477,7 +487,7 @@ class LanguageModel(BaseModel):
                 
             else:
                 input_ids_expand = input_ids
-                attn_mask_expand = attn_mask
+                attn_mask_expand = task_expls
                 task_start, task_end = prev_end, prev_end + batch_size
                 prev_end = task_end
 
@@ -496,7 +506,7 @@ class LanguageModel(BaseModel):
             if mode == 'loss':
                 comp_input_ids = input_ids.unsqueeze(0).expand(len(topk), -1, -1).reshape(-1, max_length)
                 input_ids_expand = torch.cat((input_ids_expand, comp_input_ids), dim=0)
-                attn_mask_expand = torch.cat((attn_mask_expand, inv_expls), dim=0)
+                self.select_k_model(attrs)
             elif mode == 'metric':
                 if fresh:
                     comp_input_ids = torch.ones_like(fresh_input_ids) * self.tokenizer.pad_token_id
