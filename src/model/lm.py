@@ -231,6 +231,9 @@ class LanguageModel(BaseModel):
             # The initial perturbation size is set to 0.0, and automatically tuned by the model during training
             self.target_distribution = AdaptiveTargetDistribution(initial_alpha=1.0, initial_beta=0.0)
 
+        self.task_bridge = None
+        self.bridge_distribution = AdaptiveTargetDistribution(initial_alpha=1.0, initial_beta=0.0)
+
         self.fresh = fresh
         if fresh:
             assert not expl_reg
@@ -440,7 +443,7 @@ class LanguageModel(BaseModel):
 
         # This layer select all the tokens (k=100%)
         # The reason is that we want to backpropagate the task loss through the rationale extractor
-        @aimle(target_distribution=self.target_distribution)
+        @aimle(target_distribution=self.bridge_distribution)
         def imle_select_all(attrs) -> Tensor:
             return top_k_percent(attrs, 100)
 
