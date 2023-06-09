@@ -119,6 +119,18 @@ dataset_info = {
         },
         'num_special_tokens': 2,
     },
+    'mnli': {
+        'train': ['train', 10000],
+        'dev': ['validation_matched', 2000],
+        'test': ['validation_matched', 2000],
+        'num_classes': 3,
+        'classes': ['entailment', 'neutral', 'contradiction'],
+        'max_length': {
+            'bert-base-uncased': 250,
+            'google/bigbird-roberta-base': 250,
+        },
+        'num_special_tokens': 3,
+    },
 }
 
 eraser_datasets = ['cose', 'esnli', 'movies', 'multirc']
