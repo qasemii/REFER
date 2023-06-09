@@ -18,5 +18,13 @@ num_test_seed: 0
 
 pct_train_rationales: null
 pct_train_rationales_seed: 0
-train_rationale_selection: null
 train_rationales_batch_factor: 2.0
+
+neg_weight: 1
+
+fresh_exp_id: null
+fresh_attr_algo: null
+fresh_topk: null
+
+l2e_exp_id: null
+l2e_attr_algo: null
