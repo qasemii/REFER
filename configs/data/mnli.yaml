@@ -1,4 +1,4 @@
-_target_: src.data.data.DataModule
+_target_: src.data.ood_data.DataModule
 
 dataset: mnli
 
