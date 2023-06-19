@@ -126,7 +126,7 @@ def log_epoch_losses(model_class, outputs, split):
     if model_class.expl_reg:
         assert len([x.get('expl_loss') for x in outputs if x is not None]) > 0
         
-        expl_loss = torch.stack([x.get('expl_loss') for x in outputs if x is not None]).mean()
+        expl_loss = torch.stack([x.get('expl_loss') for x in outputs if x.get('expl_loss') is not None]).mean()
         log_data_to_neptune(model_class, expl_loss, 'expl', 'loss', 'epoch', split, ret_dict=None, topk=None)
 
         if model_class.comp_wt > 0:
