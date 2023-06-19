@@ -161,13 +161,13 @@ def run(cfg: DictConfig) -> Optional[float]:
         model = restore_config_params(model, cfg)
         # if cfg.ood:
         model.max_length = dataset_info[cfg.model.dataset]['max_length'][cfg.model.arch]
-        if cfg.model.compute_attr:
-            model.attr_dict = {
-                'attr_algo': cfg.model.attr_algo,
-                'baseline_required': baseline_required[cfg.model.attr_algo],
-                'attr_func': attr_algos[cfg.model.attr_algo](model),
-                'tokenizer': AutoTokenizer.from_pretrained(model.arch),
-            }
+        # if cfg.model.compute_attr:
+        #     model.attr_dict = {
+        #         'attr_algo': cfg.model.attr_algo,
+        #         'baseline_required': baseline_required[cfg.model.attr_algo],
+        #         'attr_func': attr_algos[cfg.model.attr_algo](model),
+        #         'tokenizer': AutoTokenizer.from_pretrained(model.arch),
+        #     }
         print('Evaluating loaded model checkpoint...')
         for split in cfg.training.eval_splits.split(','):
             print(f'Evaluating on split: {split}')
