@@ -8,7 +8,11 @@ from omegaconf import DictConfig
 def main(cfg: DictConfig):
     # import here for faster auto completion
     from src.utils.conf import touch
-    from src.run import run
+
+    if cfg.model.dataset == 'mnli':
+        from src.ood_run import run
+    else:
+        from src.run import run
 
     # additional set field by condition
     # assert no missing etc
