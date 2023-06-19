@@ -159,8 +159,8 @@ def run(cfg: DictConfig) -> Optional[float]:
         model = model.load_from_checkpoint(ckpt_path, strict=False)
         logger.info(f"Loaded checkpoint for evaluation from {cfg.training.ckpt_path}")
         model = restore_config_params(model, cfg)
-        if cfg.ood:
-            model.max_length =  dataset_info[cfg.model.dataset]['max_length'][cfg.model.arch]
+        # if cfg.ood:
+        model.max_length = dataset_info[cfg.model.dataset]['max_length'][cfg.model.arch]
         if cfg.model.compute_attr:
             model.attr_dict = {
                 'attr_algo': cfg.model.attr_algo,
