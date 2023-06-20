@@ -67,6 +67,16 @@ dataset_info = {
         },
         'num_special_tokens': 3,
     },
+    'emnli': {
+        'train': ['train', 1],
+        'num_classes': 3,
+        'classes': ['entailment', 'neutral', 'contradiction'],
+        'max_length': {
+            'bert-base-uncased': 250,
+            'google/bigbird-roberta-base': 250,
+        },
+        'num_special_tokens': 3,
+    },
     'hans': {
         'train': ['train', 30000],
         'dev': ['validation', 15000],
@@ -241,6 +251,7 @@ monitor_dict = {
     'hans': 'dev_macro_f1_metric_epoch',
 
     'esnli': 'dev_loss_epoch',
+    'emnli': 'dev_loss_epoch',
 
     'evidence_inference': 'dev_macro_f1_metric_epoch',
     'fever': 'dev_macro_f1_metric_epoch',
