@@ -658,11 +658,11 @@ def main(args):
                 dataset_dict['has_rationale'].append(0)
 
         elif args.dataset == 'emnli':
-            dataset = datasets.load_dataset('reza_madani/emnli')
+            dataset = datasets.load_dataset('reza_madani/emnli')[split]
             start_idx = 0
             num_examples = 50
 
-            for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building test dataset'):
+            for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
                 text = tokenizer(
                     f'{dataset[idx]["premise"]} {tokenizer.sep_token} {dataset[idx]["hypothesis"]}',
                     padding='max_length',
