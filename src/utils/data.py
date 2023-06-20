@@ -238,6 +238,7 @@ monitor_dict = {
     'cose': 'dev_acc_metric_epoch',
 
     'mnli':'dev_macro_f1_metric_epoch',
+    'hans': 'dev_macro_f1_metric_epoch',
 
     'esnli': 'dev_loss_epoch',
 
