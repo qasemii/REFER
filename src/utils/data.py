@@ -57,8 +57,8 @@ dataset_info = {
     },
     'mnli': {
         'train': ['train', 10000],
-        'dev': ['validation', 2000],
-        'test': ['validation', 2000],
+        'dev': ['validation_matched', 2000],
+        'test': ['validation_matched', 2000],
         'num_classes': 3,
         'classes': ['entailment', 'neutral', 'contradiction'],
         'max_length': {
@@ -69,8 +69,8 @@ dataset_info = {
     },
     'hans': {
         'train': ['train', 30000],
-        'dev': ['validation_matched', 15000],
-        'test': ['validation_matched', 15000],
+        'dev': ['validation', 15000],
+        'test': ['validation', 15000],
         'num_classes': 3,
         'classes': ['entailment', 'neutral', 'contradiction'],
         'max_length': {
