@@ -658,7 +658,7 @@ def main(args):
                 dataset_dict['has_rationale'].append(0)
 
         elif args.dataset == 'emnli':
-            dataset = datasets.load_dataset('reza_madani/emnli')[split]
+            dataset = datasets.load_dataset('reza-madani/emnli')[split]
             start_idx = 0
             num_examples = 50
 
