@@ -658,6 +658,7 @@ def main(args):
                 dataset_dict['has_rationale'].append(0)
 
         elif args.dataset == 'emnli':
+            assert split=='train'
             # dataset = datasets.load_dataset('reza-madani/emnli')[split]
             with open('emnli.pkl', 'rb') as f:
                 dataset = pickle.load(f)
