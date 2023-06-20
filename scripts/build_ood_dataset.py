@@ -657,6 +657,29 @@ def main(args):
                 dataset_dict['rationale'].append(None)
                 dataset_dict['has_rationale'].append(0)
 
+
+        elif args.dataset in ['hans']:
+            dataset = datasets.load_dataset('hans')[split]
+
+            if args.split in ['train', 'dev']:
+                start_idx = 0
+            elif args.split == 'test':
+                start_idx = dataset_info[args.dataset][args.split][1]
+
+            for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
+                text = tokenizer(
+                    f'{dataset[idx]["premise"]} {tokenizer.sep_token} {dataset[idx]["hypothesis"]}',
+                    padding='max_length',
+                    max_length=max_length,
+                    truncation=True
+                )
+                dataset_dict['item_idx'].append(idx - start_idx)
+                dataset_dict['input_ids'].append(text['input_ids'])
+                dataset_dict['attention_mask'].append(text['attention_mask'])
+                dataset_dict['label'].append(dataset[idx]['label'])
+                dataset_dict['rationale'].append(None)
+                dataset_dict['has_rationale'].append(0)
+
         elif args.dataset == 'hatexplain':
             dataset = pd.read_json(os.path.join(args.data_dir, "hatexplain", "processed_" + split + ".json"),
                                    orient='records', lines=True)
@@ -765,7 +788,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str,
                         choices=['boolq', 'cose', 'esnli', 'evidence_inference', 'fever', \
                                  'movies', 'multirc', 'scifact', 'sst', 'sst2', 'amazon', 'yelp', \
-                                 'stf', 'olid', 'irony', 'mnli', 'hatexplain', 'checklist_flight'])
+                                 'stf', 'olid', 'irony', 'mnli', 'hans', 'hatexplain', 'checklist_flight'])
     parser.add_argument('--arch', type=str, default='google/bigbird-roberta-base',
                         choices=['google/bigbird-roberta-base', 'bert-base-uncased'])
     parser.add_argument('--split', type=str, help='Dataset split', choices=['train', 'dev', 'test'])
