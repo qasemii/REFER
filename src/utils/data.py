@@ -55,6 +55,30 @@ dataset_info = {
         },
         'num_special_tokens': 3,
     },
+    'mnli': {
+        'train': ['train', 10000],
+        'dev': ['validation', 2000],
+        'test': ['validation', 2000],
+        'num_classes': 3,
+        'classes': ['entailment', 'neutral', 'contradiction'],
+        'max_length': {
+            'bert-base-uncased': 250,
+            'google/bigbird-roberta-base': 250,
+        },
+        'num_special_tokens': 3,
+    },
+    'hans': {
+        'train': ['train', 30000],
+        'dev': ['validation_matched', 15000],
+        'test': ['validation_matched', 15000],
+        'num_classes': 3,
+        'classes': ['entailment', 'neutral', 'contradiction'],
+        'max_length': {
+            'bert-base-uncased': 250,
+            'google/bigbird-roberta-base': 250,
+        },
+        'num_special_tokens': 3,
+    },
     'evidence_inference': {
         'train': ['train', 7958],
         'dev': ['val_exhaustive', 1073],
@@ -150,18 +174,6 @@ dataset_info = {
             'google/bigbird-roberta-base': 512,
         },
         'num_special_tokens': 2,
-    },
-    'mnli': {
-        'train': ['train', 10000],
-        'dev': ['validation_matched', 2000],
-        'test': ['validation_matched', 2000],
-        'num_classes': 3,
-        'classes': ['entailment', 'neutral', 'contradiction'],
-        'max_length': {
-            'bert-base-uncased': 250,
-            'google/bigbird-roberta-base': 250,
-        },
-        'num_special_tokens': 3,
     },
     'hatexplain': {
         'train': ['train', 15383],
