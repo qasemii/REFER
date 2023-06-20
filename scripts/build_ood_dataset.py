@@ -247,7 +247,7 @@ def main(args):
         interned_annotations = bert_intern_annotation(annotations, tokenizer)
         if args.dataset in ['cose', 'esnli', 'movies']:
             evidence_data = annotations_to_evidence_token_identification(annotations, documents, interned_documents,
-                                                                         interned_document_token_slices)
+                                                                          interned_document_token_slices)
         elif args.dataset in ['fever', 'multirc']:
             evidence_data = annotations_to_evidence_identification(annotations, interned_documents)
         assert len(evidence_data) == num_examples
@@ -657,16 +657,12 @@ def main(args):
                 dataset_dict['rationale'].append(None)
                 dataset_dict['has_rationale'].append(0)
 
+        elif args.dataset == 'emnli':
+            dataset = datasets.load_dataset('reza_madani/emnli')
+            start_idx = 0
+            num_examples = 50
 
-        elif args.dataset in ['hans']:
-            dataset = datasets.load_dataset('hans')[split]
-
-            if args.split in ['train', 'dev']:
-                start_idx = 0
-            elif args.split == 'test':
-                start_idx = dataset_info[args.dataset][args.split][1]
-
-            for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
+            for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building test dataset'):
                 text = tokenizer(
                     f'{dataset[idx]["premise"]} {tokenizer.sep_token} {dataset[idx]["hypothesis"]}',
                     padding='max_length',
@@ -677,8 +673,8 @@ def main(args):
                 dataset_dict['input_ids'].append(text['input_ids'])
                 dataset_dict['attention_mask'].append(text['attention_mask'])
                 dataset_dict['label'].append(dataset[idx]['label'])
-                dataset_dict['rationale'].append(None)
-                dataset_dict['has_rationale'].append(0)
+                dataset_dict['rationale'].append([0] + dataset[idx]['premise_rationale'] + [0] + dataset[idx]['hypothesis_rationale'] + [0])
+                dataset_dict['has_rationale'].append(1)
 
         elif args.dataset == 'hatexplain':
             dataset = pd.read_json(os.path.join(args.data_dir, "hatexplain", "processed_" + split + ".json"),
@@ -788,7 +784,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str,
                         choices=['boolq', 'cose', 'esnli', 'evidence_inference', 'fever', \
                                  'movies', 'multirc', 'scifact', 'sst', 'sst2', 'amazon', 'yelp', \
-                                 'stf', 'olid', 'irony', 'mnli', 'hans', 'hatexplain', 'checklist_flight'])
+                                 'stf', 'olid', 'irony', 'mnli', 'emnli', 'hans', 'hatexplain', 'checklist_flight'])
     parser.add_argument('--arch', type=str, default='google/bigbird-roberta-base',
                         choices=['google/bigbird-roberta-base', 'bert-base-uncased'])
     parser.add_argument('--split', type=str, help='Dataset split', choices=['train', 'dev', 'test'])

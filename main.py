@@ -9,7 +9,7 @@ def main(cfg: DictConfig):
     # import here for faster auto completion
     from src.utils.conf import touch
 
-    if cfg.model.dataset in ['mnli', 'hans']:
+    if cfg.model.dataset in ['mnli', 'hans', 'emnli']:
         from src.ood_run import run
     else:
         from src.run import run
