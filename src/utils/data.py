@@ -81,8 +81,8 @@ dataset_info = {
         'train': ['train', 30000],
         'dev': ['validation', 15000],
         'test': ['validation', 15000],
-        'num_classes': 3,
-        'classes': ['entailment', 'neutral', 'contradiction'],
+        'num_classes': 2,
+        'classes': ['entailment', 'non-entailment'],
         'max_length': {
             'bert-base-uncased': 250,
             'google/bigbird-roberta-base': 250,
