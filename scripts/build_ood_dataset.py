@@ -657,6 +657,28 @@ def main(args):
                 dataset_dict['rationale'].append(None)
                 dataset_dict['has_rationale'].append(0)
 
+        elif args.dataset in ['hans']:
+            dataset = datasets.load_dataset('hans')[split]
+
+            if args.split in ['train', 'dev']:
+                start_idx = 0
+            elif args.split == 'test':
+                start_idx = dataset_info[args.dataset][args.split][1]
+
+            for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
+                text = tokenizer(
+                    f'{dataset[idx]["premise"]} {tokenizer.sep_token} {dataset[idx]["hypothesis"]}',
+                    padding='max_length',
+                    max_length=max_length,
+                    truncation=True
+                )
+                dataset_dict['item_idx'].append(idx - start_idx)
+                dataset_dict['input_ids'].append(text['input_ids'])
+                dataset_dict['attention_mask'].append(text['attention_mask'])
+                dataset_dict['label'].append(dataset[idx]['label'])
+                dataset_dict['rationale'].append(None)
+                dataset_dict['has_rationale'].append(0)
+
         elif args.dataset == 'emnli':
             assert split=='train'
             # dataset = datasets.load_dataset('reza-madani/emnli')[split]
