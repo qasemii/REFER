@@ -682,7 +682,7 @@ def main(args):
         elif args.dataset == 'emnli':
             assert split=='train'
             # dataset = datasets.load_dataset('reza-madani/emnli')[split]
-            with open(os.path.join(os.getcwd, 'emnli.pkl'), 'rb') as f:
+            with open(os.path.join(os.getcwd, 'emnli.pkl'), 'b') as f:
                 dataset = pickle.load(f)
             start_idx = 0
             num_examples = 50
