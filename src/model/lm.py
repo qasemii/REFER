@@ -758,7 +758,7 @@ class LanguageModel(BaseModel):
             if self.dataset == 'hans':
                 # when we use hans as OOD, num_classes is 3 because of esnli config
                 # so we consider both neutral and contradiction classes as non-entailment using the following line
-                pred[preds == 2] = 1
+                preds[preds == 2] = 1
 
             # Set models to eval mode
             for model in self.model_dict.values():
