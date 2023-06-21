@@ -682,8 +682,9 @@ def main(args):
         elif args.dataset == 'emnli':
             assert split=='train'
             # dataset = datasets.load_dataset('reza-madani/emnli')[split]
-            with open('emnli.pkl', 'r') as f:
-                dataset = pickle.load(f)
+            # with open('emnli.pkl', 'r') as f:
+            #     dataset = pickle.load(f)
+            dataset = datasets.load_dataset('reza-madani/emnli')[split][0]
             start_idx = 0
             num_examples = 50
 
@@ -698,7 +699,7 @@ def main(args):
                 dataset_dict['input_ids'].append(text['input_ids'])
                 dataset_dict['attention_mask'].append(text['attention_mask'])
                 dataset_dict['label'].append(dataset[idx]['label'])
-                dataset_dict['rationale'].append([0] + dataset[idx]['premise_rationale'] + [0] + dataset[idx]['hypothesis_rationale'] + [0])
+                dataset_dict['rationale'].append([0] + [1]*14 + [0] + [0]*12 + [0])
                 dataset_dict['has_rationale'].append(1)
 
         elif args.dataset == 'hatexplain':
