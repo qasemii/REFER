@@ -696,7 +696,7 @@ def main(args):
                     truncation=True
                 )
 
-                num_tokens = len(text['input_ids'])
+                num_tokens = text['input_ids'].index(tokenizer.sep_token_id)
                 num_pad_tokens = max_length - num_tokens
 
                 dataset_dict['item_idx'].append(idx - start_idx)
