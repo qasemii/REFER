@@ -680,17 +680,9 @@ def main(args):
                 dataset_dict['has_rationale'].append(0)
 
         elif args.dataset == 'emnli':
-            # assert split == 'train'
-            # dataset = datasets.load_dataset('reza-madani/emnli')[split]
-            # dataset = pickle.load(open('emnli.pkl', 'r'))
-            # dataset = datasets.load_dataset('multi_nli')[split]
             dataset = pickle.load(open('emnli.pkl', 'rb'))
 
-            if args.split in ['train', 'dev']:
-                start_idx = 0
-            elif args.split == 'test':
-                start_idx = dataset_info[args.dataset][args.split][1]
-
+            start_idx = 0
             for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
                 text = tokenizer(
                     f'{dataset[idx]["premise"]} {tokenizer.sep_token} {dataset[idx]["hypothesis"]}',
