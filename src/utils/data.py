@@ -68,7 +68,9 @@ dataset_info = {
         'num_special_tokens': 3,
     },
     'emnli': {
-        'train': ['train', 1],
+        'train': ['train', 50],
+        'dev': ['train', 50],
+        'test': ['train', 50],
         'num_classes': 3,
         'classes': ['entailment', 'neutral', 'contradiction'],
         'max_length': {
