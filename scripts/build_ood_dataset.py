@@ -680,12 +680,13 @@ def main(args):
                 dataset_dict['has_rationale'].append(0)
 
         elif args.dataset == 'emnli':
-            assert split == 'train'
+            # assert split == 'train'
             # dataset = datasets.load_dataset('reza-madani/emnli')[split]
-            # with open('emnli.pkl', 'r') as f:
-            #     dataset = pickle.load(f)
-            dataset = datasets.load_dataset('multi_nli')[split]
-            start_idx = 0
+            # dataset = pickle.load(open('emnli.pkl', 'r'))
+            # dataset = datasets.load_dataset('multi_nli')[split]
+            dataset = pickle.load(open('emnli.pkl', 'rb'))
+
+            start_idx = 50
             num_examples = 1
 
             for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
@@ -703,7 +704,7 @@ def main(args):
                 dataset_dict['input_ids'].append(text['input_ids'])
                 dataset_dict['attention_mask'].append(text['attention_mask'])
                 dataset_dict['label'].append(dataset[idx]['label'])
-                dataset_dict['rationale'].append([0] + [1]*14 + [0] + [1]*12 + [0] + [0]*num_pad_tokens)
+                dataset_dict['rationale'].append([0] + dataset[idx]['premise_rationale'] + [0] + dataset[idx]['hypothesis_rationale'] + [0] + [0] * num_pad_tokens)
                 dataset_dict['has_rationale'].append(1)
 
         elif args.dataset == 'hatexplain':
