@@ -686,8 +686,8 @@ def main(args):
             # dataset = datasets.load_dataset('multi_nli')[split]
             dataset = pickle.load(open('emnli.pkl', 'rb'))
 
-            start_idx = 50
-            num_examples = 1
+            start_idx = 0
+            num_examples = 50
 
             for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
                 text = tokenizer(
