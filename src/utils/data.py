@@ -11,8 +11,8 @@ dataset_info = {
         },
         'num_special_tokens': None,
     },
-      'contrast_mnli_original': {
-        'test': ['test', 1446],
+      'mnli_contrast_original': {
+        'test': ['test', 1998],
         'num_classes': 3,
         'classes': ['entailment', 'neutral', 'contradiction'],
         'max_length': {
@@ -21,8 +21,8 @@ dataset_info = {
         },
         'num_special_tokens': 3,
     },
-    'contrast_mnli_contrast': {
-        'test': ['test', 4285],
+    'mnli_contrast_contrast': {
+        'test': ['test', 2543],
         'num_classes': 3,
         'classes': ['entailment', 'neutral', 'contradiction'],
         'max_length': {
@@ -268,8 +268,8 @@ monitor_dict = {
     'imdb':'dev_acc_metric_epoch',
     'checklist_snli':'dev_macro_f1_metric_epoch',
     'checklist_sst': 'dev_acc_metric_epoch',
-    'contrast_mnli_original':'dev_macro_f1_metric_epoch',
-    'contrast_mnli_contrast':'dev_macro_f1_metric_epoch',
+    'mnli_contrast_original':'dev_macro_f1_metric_epoch',
+    'mnli_contrast_contrast':'dev_macro_f1_metric_epoch',
 }
 
 data_keys = ['item_idx', 'input_ids', 'attention_mask', 'rationale', 'inv_rationale', 'rand_rationale', 'has_rationale', 'label', 'rationale_indices']

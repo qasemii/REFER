@@ -701,6 +701,25 @@ def main(args):
                 dataset_dict['rationale'].append([0] + dataset[idx]['premise_rationale'] + [0] + dataset[idx]['hypothesis_rationale'] + [0] + [0] * num_pad_tokens)
                 dataset_dict['has_rationale'].append(1)
 
+
+        elif args.dataset in ['mnli_contrast_contrast', 'mnli_contrast_original']:
+            dataset = pickle.load(open(f'{args.dataset}.pkl', 'rb'))
+
+            start_idx = 0
+            for idx in tqdm(range(start_idx, start_idx + num_examples), desc=f'Building {args.split} dataset'):
+                text = tokenizer(
+                    f'{dataset[idx]["premise"]} {tokenizer.sep_token} {dataset[idx]["hypothesis"]}',
+                    padding='max_length',
+                    max_length=max_length,
+                    truncation=True
+                )
+                dataset_dict['item_idx'].append(idx - start_idx)
+                dataset_dict['input_ids'].append(text['input_ids'])
+                dataset_dict['attention_mask'].append(text['attention_mask'])
+                dataset_dict['label'].append(dataset[idx]['label'])
+                dataset_dict['rationale'].append(None)
+                dataset_dict['has_rationale'].append(0)
+
         elif args.dataset == 'hatexplain':
             dataset = pd.read_json(os.path.join(args.data_dir, "hatexplain", "processed_" + split + ".json"),
                                    orient='records', lines=True)
