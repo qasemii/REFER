@@ -828,7 +828,8 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str,
                         choices=['boolq', 'cose', 'esnli', 'evidence_inference', 'fever', \
                                  'movies', 'multirc', 'scifact', 'sst', 'sst2', 'amazon', 'yelp', \
-                                 'stf', 'olid', 'irony', 'mnli', 'emnli', 'hans', 'hatexplain', 'checklist_flight'])
+                                 'stf', 'olid', 'irony', 'mnli', 'emnli', 'hans', 'hatexplain', 'checklist_flight',
+                                 'mnli_contrast_contrast', 'mnli_contrast_original'])
     parser.add_argument('--arch', type=str, default='google/bigbird-roberta-base',
                         choices=['google/bigbird-roberta-base', 'bert-base-uncased'])
     parser.add_argument('--split', type=str, help='Dataset split', choices=['train', 'dev', 'test'])
