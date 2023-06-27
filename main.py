@@ -10,6 +10,7 @@ def main(cfg: DictConfig):
     from src.utils.conf import touch
 
     if cfg.model.dataset =='allennlp':
+        cfg.model.dataset = 'esnli'
         from src.allennlp_run import run
     elif cfg.model.dataset in ['mnli', 'hans', 'emnli', 'mnli_contrast_original', 'mnli_contrast_contrast']:
         from src.ood_run import run
