@@ -15,8 +15,6 @@ from src.utils.logging import get_logger
 from src.utils.callbacks import BestPerformance
 from src.utils.expl import attr_algos, baseline_required
 
-from allennlp.confidence_checks.task_checklists import TextualEntailmentSuite
-
 
 def get_callbacks(cfg: DictConfig):
 
@@ -179,7 +177,4 @@ def run(cfg: DictConfig) -> Optional[float]:
                 loader = dm.val_dataloader(test=True)
             elif split == 'test':
                 loader = dm.test_dataloader()
-            # trainer.test(model=model, dataloaders=loader)
-
-            suite = TextualEntailmentSuite()
-            suite.run(model, max_examples=15)
+            trainer.test(model=model, dataloaders=loader)
