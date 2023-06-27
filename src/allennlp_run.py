@@ -57,16 +57,6 @@ logger = get_logger(__name__)
 
 
 def build(cfg) -> Tuple[pl.LightningDataModule, pl.LightningModule, pl.Trainer]:
-    dm = instantiate(
-        cfg.data,
-        attr_algo=cfg.model.attr_algo,
-        fresh_extractor=cfg.model.fresh_extractor,
-        train_shuffle=cfg.training.train_shuffle,
-    )
-    dm.setup(splits=cfg.training.eval_splits.split(","))
-
-    logger.info(f'load {cfg.data.dataset} <{cfg.data._target_}>')
-
     model = instantiate(
         cfg.model, num_classes=dataset_info[cfg.data.dataset]['num_classes'],
         neg_weight=cfg.data.neg_weight,
@@ -105,7 +95,7 @@ def build(cfg) -> Tuple[pl.LightningDataModule, pl.LightningModule, pl.Trainer]:
         _convert_="all",
     )
 
-    return dm, model, trainer
+    return model, trainer
 
 
 def restore_config_params(model, cfg: DictConfig):
@@ -138,7 +128,7 @@ def restore_config_params(model, cfg: DictConfig):
 
 def run(cfg: DictConfig) -> Optional[float]:
     pl.seed_everything(cfg.seed)
-    dm, model, trainer = build(cfg)
+    model, trainer = build(cfg)
     pl.seed_everything(cfg.seed)
 
     # evaluate the pretrained model on the provided splits
