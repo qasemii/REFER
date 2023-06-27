@@ -12,7 +12,7 @@ dataset_info = {
         'num_special_tokens': None,
     },
       'mnli_contrast_original': {
-        'test': ['test', 1998],
+        'test': ['test', 1995],
         'num_classes': 3,
         'classes': ['entailment', 'neutral', 'contradiction'],
         'max_length': {
