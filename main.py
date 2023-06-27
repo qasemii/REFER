@@ -13,12 +13,13 @@ def main(cfg: DictConfig):
         from src.allennlp_run import run
     elif cfg.model.dataset in ['mnli', 'hans', 'emnli', 'mnli_contrast_original', 'mnli_contrast_contrast']:
         from src.ood_run import run
+        touch(cfg)
     else:
         from src.run import run
+        touch(cfg)
 
     # additional set field by condition
     # assert no missing etc
-    touch(cfg)
 
     start_time = time.time()
     metric = run(cfg)
