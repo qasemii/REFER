@@ -58,7 +58,7 @@ logger = get_logger(__name__)
 
 def build(cfg) -> Tuple[pl.LightningDataModule, pl.LightningModule, pl.Trainer]:
     model = instantiate(
-        cfg.model, num_classes=dataset_info[cfg.data.dataset]['num_classes'],
+        cfg.model, num_classes=dataset_info['esnli']['num_classes'],
         neg_weight=cfg.data.neg_weight,
         _recursive_=False
     )
