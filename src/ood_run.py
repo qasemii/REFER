@@ -160,10 +160,10 @@ def run(cfg: DictConfig) -> Optional[float]:
         logger.info(f"Loaded checkpoint for evaluation from {cfg.training.ckpt_path}")
         model = restore_config_params(model, cfg)
 
-        if cfg.finetune_heads:
-            for module in [model.expl_encoder, model.task_encoder]:
-                for n, p in module.named_parameters():
-                    p.requires_grad = False
+        # if cfg.finetune_heads:
+        for module in [model.expl_encoder, model.task_encoder]:
+            for n, p in module.named_parameters():
+                p.requires_grad = False
 
         # if cfg.ood:
         model.max_length = dataset_info[cfg.model.dataset]['max_length'][cfg.model.arch]
