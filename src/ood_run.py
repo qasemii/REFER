@@ -145,6 +145,11 @@ def run(cfg: DictConfig) -> Optional[float]:
             model = restore_config_params(model, cfg)
             logger.info(f"Loaded checkpoint (for fine-tuning) from {ckpt_path}")
 
+            if cfg.finetune_heads:
+                for module in [model.expl_encoder, model.task_encoder]:
+                    for n, p in module.named_parameters():
+                        p.requires_grad = False
+
         trainer.fit(model=model, datamodule=dm)
 
         if getattr(cfg, "tune_metric", None):
@@ -159,11 +164,6 @@ def run(cfg: DictConfig) -> Optional[float]:
         model = model.load_from_checkpoint(ckpt_path, strict=False)
         logger.info(f"Loaded checkpoint for evaluation from {cfg.training.ckpt_path}")
         model = restore_config_params(model, cfg)
-
-        # if cfg.finetune_heads:
-        for module in [model.expl_encoder, model.task_encoder]:
-            for n, p in module.named_parameters():
-                p.requires_grad = False
 
         # if cfg.ood:
         model.max_length = dataset_info[cfg.model.dataset]['max_length'][cfg.model.arch]
