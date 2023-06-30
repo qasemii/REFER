@@ -146,7 +146,7 @@ def run(cfg: DictConfig) -> Optional[float]:
             logger.info(f"Loaded checkpoint (for fine-tuning) from {ckpt_path}")
 
             if cfg.finetune_heads:
-                for module in [model.expl_encoder, model.task_encoder]:
+                for modoule in [model.expl_encoder, model.task_encoder]:
                     for n, p in module.named_parameters():
                         p.requires_grad = False
 
