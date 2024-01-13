@@ -9,4 +9,4 @@ tag_attrs:
   - ${model.arch}
 name: test
 offline: False
-project_name: shared.workspace/UNIREX
+project_name: neptune_project_name
